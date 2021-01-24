@@ -57,9 +57,6 @@
         padding-left: 20px;
         text-align: left;
     }
-    tr td:first-child {
-        font-size: 12px;
-    }
     ol span {
         color: #2e6da4;
     }
@@ -118,8 +115,8 @@
                 <td>'.$item[1].'</td>
                 <td>'.$item[2].'</td>
                 <td>'.(number_format ( $item[3], 0, "." , "," )).'</td>
-                <td style="min-width: 170px;" data-sort="'.$item[6].'">'.(number_format ( $item[6], 0, "." , "," )).'<div class="input spoiler_links">'.$item[8].' tx (show)</div><div class="spoiler_body">'.$sListInput.'</div></td>
-                <td style="min-width: 170px;" data-sort="'.$item[7].'">'.(number_format ( $item[7], 0, "." , "," )).'<div class="output spoiler_links">'.$item[9].' tx (show)</div><div class="spoiler_body">'.$sListOutput.'</div></td>
+                <td style="min-width: 170px;" data-sort="'.$item[6].'">'.(number_format ( $item[6], 0, "." , "," )).($item[8]>0?'<div class="input spoiler_links">'.$item[8].' tx (show)</div><div class="spoiler_body">'.$sListInput.'</div>':'').'</td>
+                <td style="min-width: 170px;" data-sort="'.$item[7].'">'.(number_format ( $item[7], 0, "." , "," )).($item[9]>0?'<div class="output spoiler_links">'.$item[9].' tx (show)</div><div class="spoiler_body">'.$sListOutput.'</div>':'').'</td>
             </tr>';
                 }
             }
