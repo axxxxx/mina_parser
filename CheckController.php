@@ -16,7 +16,7 @@ class CheckController extends AppController {
 
         if(!$aMina=$cache->get('mina')){
 
-            # insert the html code here from the XXX page with links to all addresses (https://minaexplorer.com/ledger)
+            # insert the html code here from the page with links to all addresses (https://minaexplorer.com/ledger)
             $htmlTable="";
 
             $aMina=[];
