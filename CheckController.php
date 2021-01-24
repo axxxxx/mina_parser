@@ -43,7 +43,7 @@ class CheckController extends AppController {
         }else{
             $aMina=unserialize($aMina);
 
-            $i=3;
+            $i=0;
             foreach ($aMina as $key=>$value){
                 $i++;
                 if(isset($aMina[$key][4])&&isset($aMina[$key][5])&&$aMina[$key][4]>=$aMina[$key][5]){
@@ -71,14 +71,19 @@ class CheckController extends AppController {
                     $aMina[$key][5]=$iPages;
                     $aMina[$key][6]=0; // input
                     $aMina[$key][7]=0; // output
+                    $aMina[$key][8]=0; // input count
+                    $aMina[$key][9]=0; // output count
+                    $aMina[$key][10]=[]; // input target
+                    $aMina[$key][11]=[]; // output target
                     $cache->set('mina', serialize($aMina),60*60*24*7);
                 }
 
                 // get tx
                 if($aMina[$key][4]<$aMina[$key][5]){
 
-                    // 10 pages
-                    foreach ([1,2,3,4,5,6,7,8,9,10] as $count){
+                    $z=0;
+                    while ($z<=10){
+                        $z++;
                         $aMina[$key][4]=$aMina[$key][4]+1;
 
                         $ch = curl_init();
@@ -103,19 +108,30 @@ class CheckController extends AppController {
                                 }elseif(substr_count($valtx,'icon-arrow-down7')){
                                     $tx='input';
                                 }
+
                                 if($tx){
-                                    $aTx=explode('<h6 class="font-weight-semibold mb-0">',$valtx);
-                                    $aTx=explode('</h6>',$aTx[2]);
-                                    $sTx=trim($aTx[0]);
-                                    //exit;
-                                    if($sTx>=200){
-                                        if($tx=='input'){
-                                            $aMina[$key][6]=$aMina[$key][6]+$sTx;
-                                        }else{
-                                            $aMina[$key][7]=$aMina[$key][7]+$sTx;
+
+                                    if (preg_match_all('|data-popup="tooltip" data-placement="top" title="(.+)" class="text|isU', $valtx, $arrName)) {
+                                        if($arrName[1][0]!=$arrName[1][1]){
+                                            $aTx=explode('<h6 class="font-weight-semibold mb-0">',$valtx);
+                                            $aTx=explode('</h6>',$aTx[2]);
+                                            $sTx=trim($aTx[0]);
+                                            //exit;
+                                            if($sTx>=200){
+                                                if($tx=='input'){
+                                                    $aMina[$key][6]=$aMina[$key][6]+$sTx;
+                                                    $aMina[$key][8]=$aMina[$key][8]+1;
+                                                    $aMina[$key][10][]=$arrName[1][0].' '.($sTx*1);
+                                                }else{
+                                                    $aMina[$key][7]=$aMina[$key][7]+$sTx;
+                                                    $aMina[$key][9]=$aMina[$key][9]+1;
+                                                    $aMina[$key][11][]=$arrName[1][1].' '.($sTx*1);
+                                                }
+                                                $cache->set('mina', serialize($aMina),60*60*24*7);
+                                            }
                                         }
-                                        $cache->set('mina', serialize($aMina),60*60*24*7);
                                     }
+
                                 }
                             }
 
@@ -130,7 +146,7 @@ class CheckController extends AppController {
                     }
                 }
                 $cache->set('mina', serialize($aMina),60*60*24*7);
-                if($i>=1){
+                if($i>=3){
                     break;
                 }
             }
@@ -138,6 +154,7 @@ class CheckController extends AppController {
 
             // auto-refresh of the page in the browser to continue parsing.
             //echo '<meta http-equiv="refresh" content="2" />';
+            //print_r($aMina);
 
         }
 
