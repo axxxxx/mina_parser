@@ -16,8 +16,12 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="//cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
 <style>
+    table.dataTable tbody th, table.dataTable tbody td {
+        padding: 8px 2px;
+    }
     .dataTable {
         text-align: center;
+        font-size: 15px;
     }
     .input {
         display: block;
@@ -41,6 +45,7 @@
         background-color: #f17d74;
     }
     .spoiler_links {
+        margin-top: 2px;
         cursor:pointer;
     }
     .spoiler_body {
@@ -54,6 +59,9 @@
     }
     tr td:first-child {
         font-size: 12px;
+    }
+    ol span {
+        color: #2e6da4;
     }
 </style>
 
@@ -88,7 +96,8 @@
                         $sListInput.='<ol reversed>';
                         $item[10]=array_reverse($item[10]);
                         foreach ($item[10] as $in){
-                            $sListInput.='<li>'.$in.'</li>';
+                            $aIn=explode(' ',$in);
+                            $sListInput.='<li>'.$aIn[0].' <span>'.(number_format ( $aIn[1], 0, "." , "," )).'</span></li>';
                         }
                         $sListInput.='</ol>';
                     }
@@ -98,7 +107,8 @@
                         $sListOutput.='<ol reversed>';
                         $item[11]=array_reverse($item[11]);
                         foreach ($item[11] as $out){
-                            $sListOutput.='<li>'.$out.'</li>';
+                            $aOut=explode(' ',$out);
+                            $sListOutput.='<li>'.$aOut[0].' <span>'.(number_format ( $aOut[1], 0, "." , "," )).'</span></li>';
                         }
                         $sListOutput.='</ol>';
                     }
@@ -107,9 +117,9 @@
                 <td>'.$item[0].'</td>
                 <td>'.$item[1].'</td>
                 <td>'.$item[2].'</td>
-                <td>'.$item[3].'</td>
-                <td>'.$item[6].($item[6]>0?'<div class="input spoiler_links">Show '.$item[8].' tx</div><div class="spoiler_body">'.$sListInput.'</div>':'').'</td>
-                <td>'.$item[7].($item[7]>0?'<div class="output spoiler_links">Show '.$item[9].' tx</div><div class="spoiler_body">'.$sListOutput.'</div>':'').'</td>
+                <td>'.(number_format ( $item[3], 0, "." , "," )).'</td>
+                <td style="min-width: 170px;" data-sort="'.$item[6].'">'.(number_format ( $item[6], 0, "." , "," )).'<div class="input spoiler_links">'.$item[8].' tx (show)</div><div class="spoiler_body">'.$sListInput.'</div></td>
+                <td style="min-width: 170px;" data-sort="'.$item[7].'">'.(number_format ( $item[7], 0, "." , "," )).'<div class="output spoiler_links">'.$item[9].' tx (show)</div><div class="spoiler_body">'.$sListOutput.'</div></td>
             </tr>';
                 }
             }
